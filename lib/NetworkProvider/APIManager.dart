@@ -3,7 +3,8 @@ import 'dart:core';
 import 'dart:io';
 
 import 'package:http/http.dart' show Response;
-import 'package:http_logger/http_logger.dart';
+import '../http_logger-1.0.0/lib/log_level.dart';
+import '../http_logger-1.0.0/lib/logging_middleware.dart';
 import 'package:http_middleware/http_middleware.dart';
 
 class APIManager {

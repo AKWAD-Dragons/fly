@@ -67,6 +67,15 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  graphqb:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: b2ab5a1c53ea3e2a2c8dd9c77090a8af457ea399
+      url: "https://github.com/AKWAD-Dragons/GraphQB.git"
+    source: git
+    version: "0.0.1"
   http:
     dependency: transitive
     description:
@@ -74,19 +83,14 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.12.1"
-  http_logger:
-    dependency: "direct main"
-    description:
-      path: "lib/http_logger-1.0.0"
-      relative: true
-    source: path
-    version: "1.0.0"
   http_middleware:
     dependency: "direct main"
     description:
-      path: "lib/http_middleware-1.0.0"
-      relative: true
-    source: path
+      path: "."
+      ref: HEAD
+      resolved-ref: "39dea4509af8d11fb233660e653d3df084d8505b"
+      url: "https://github.com/TEDConsulting/http_middleware.git"
+    source: git
     version: "1.0.0"
   http_parser:
     dependency: transitive

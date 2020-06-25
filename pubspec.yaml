@@ -10,10 +10,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  http_logger:
-    path: lib/http_logger-1.0.0
   http_middleware:
-    path: lib/http_middleware-1.0.0
+    git: https://github.com/TEDConsulting/http_middleware.git
+  graphqb:
+    git: https://github.com/AKWAD-Dragons/GraphQB.git
 
 dev_dependencies:
   flutter_test:
