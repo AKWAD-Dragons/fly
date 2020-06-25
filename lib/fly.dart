@@ -97,7 +97,8 @@ class Fly {
     assert(_defaultConfigs?.parser != null || parser != null,
         "Add parser in default configs or parameter");
     return _request(
-        apiUrl: apiUrl + path,
+        apiUrl: apiUrl,
+        path: path,
         parser: parser,
         setParsingStartNode: setParsingStartNode,
         requestMethod: Method.GET,
@@ -217,7 +218,6 @@ class Fly {
     if (myParsingNode == null) {
       return null;
     }
-
 
     final result = parser.dynamicParse(myParsingNode);
 
