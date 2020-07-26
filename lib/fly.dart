@@ -7,10 +7,10 @@ import 'dart:convert';
 import 'dart:core';
 
 import 'package:flutter/cupertino.dart';
+import 'package:fly/GraphQB/graph_qb.dart';
 import 'package:fly/NetworkProvider/APIManager.dart';
-import 'package:graphqb/graphqb.dart';
 import 'package:http/http.dart' show Response;
-import 'package:http_middleware/http_methods.dart';
+import 'http_middleware-1.0.0/http_methods.dart';
 
 typedef ErrorParsingException = Exception Function(Response response);
 typedef SetParsingStartNode = dynamic Function(dynamic json);

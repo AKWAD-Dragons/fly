@@ -2,10 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:http/http.dart';
-import 'package:http_middleware/http_methods.dart';
-import 'package:http_middleware/models/request_data.dart';
-import 'package:http_middleware/models/response_data.dart';
+import 'http_methods.dart';
 import 'middleware_contract.dart';
+import 'models/request_data.dart';
+import 'models/response_data.dart';
 
 ///Class to be used by the user as a replacement for 'http' with middleware supported.
 ///call the `build()` constructor passing in the list of middlewares.

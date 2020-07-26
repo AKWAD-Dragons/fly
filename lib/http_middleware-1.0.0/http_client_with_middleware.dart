@@ -5,10 +5,10 @@ import 'package:collection/collection.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:http/io_client.dart';
-import 'package:http_middleware/http_methods.dart';
-import 'package:http_middleware/models/request_data.dart';
-import 'package:http_middleware/models/response_data.dart';
+import 'http_methods.dart';
 import 'middleware_contract.dart';
+import 'models/request_data.dart';
+import 'models/response_data.dart';
 
 ///Class to be used by the user to set up a new `http.Client` with middleware supported.
 ///call the `build()` constructor passing in the list of middlewares.
