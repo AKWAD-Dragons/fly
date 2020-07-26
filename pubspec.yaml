@@ -1,8 +1,8 @@
 name: fly
 description: A dart package to handle network requests and response parsing
 version: 0.0.1
-author:
-homepage:
+author: AKWAD Tech
+homepage: www.akwadtech.com
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
