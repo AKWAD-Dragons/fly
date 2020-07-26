@@ -1,4 +1,4 @@
-library fly;
+library fly_networking;
 
 import 'dart:async';
 
@@ -7,8 +7,8 @@ import 'dart:convert';
 import 'dart:core';
 
 import 'package:flutter/cupertino.dart';
-import 'package:fly/GraphQB/graph_qb.dart';
-import 'package:fly/NetworkProvider/APIManager.dart';
+import 'package:fly_networking/GraphQB/graph_qb.dart';
+import 'package:fly_networking/NetworkProvider/APIManager.dart';
 import 'package:http/http.dart' show Response;
 import 'http_middleware-1.0.0/http_methods.dart';
 

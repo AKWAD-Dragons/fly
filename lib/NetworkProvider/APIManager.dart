@@ -2,10 +2,10 @@ import 'dart:async';
 import 'dart:core';
 import 'dart:io';
 
-import 'package:fly/http_logger-1.0.0/log_level.dart';
-import 'package:fly/http_logger-1.0.0/logging_middleware.dart';
-import 'package:fly/http_middleware-1.0.0/http_client_with_middleware.dart';
-import 'package:fly/http_middleware-1.0.0/http_methods.dart';
+import 'package:fly_networking/http_logger-1.0.0/log_level.dart';
+import 'package:fly_networking/http_logger-1.0.0/logging_middleware.dart';
+import 'package:fly_networking/http_middleware-1.0.0/http_client_with_middleware.dart';
+import 'package:fly_networking/http_middleware-1.0.0/http_methods.dart';
 import 'package:http/http.dart' show Response;
 
 class APIManager {

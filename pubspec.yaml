@@ -1,4 +1,4 @@
-name: fly
+name: fly_networking
 description: A dart package to handle network requests and response parsing
 version: 1.0.0
 homepage: https://www.akwadtech.com
