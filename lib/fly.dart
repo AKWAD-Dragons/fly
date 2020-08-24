@@ -177,7 +177,7 @@ abstract class Parser<T> {
     }
 
     List<T> dataList = [];
-    data.forEach((T singleData) {
+    data.forEach((singleData) {
       dataList.add(parse(singleData));
     });
 
