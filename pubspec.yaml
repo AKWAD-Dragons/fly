@@ -1,7 +1,7 @@
 name: fly_networking
 description: A dart package to handle network requests and response parsing
-version: 2.0.0
-homepage: https://www.akwadtech.com
+version: 2.0.1
+repository: https://github.com/AKWAD-Dragons/fly
 
 environment:
   sdk: ">=2.7.0 <3.0.0"

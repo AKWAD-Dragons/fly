@@ -5,3 +5,7 @@
 ## 2.0.0
 
 * Replaced unstable version of fly with the old one used in SERCL APP
+
+## 2.0.1
+
+* Changed minor dart syntax
