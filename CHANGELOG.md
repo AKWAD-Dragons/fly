@@ -9,3 +9,7 @@
 ## 2.0.1
 
 * Changed minor dart syntax
+
+## 2.0.2
+
+* Fixed dynamic Parse forEach generic type issue in fly
