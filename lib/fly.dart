@@ -7,10 +7,11 @@ import 'dart:convert';
 import 'dart:core';
 
 import 'package:fly_networking/NetworkProvider/APIManager.dart';
-import 'package:http/http.dart';
 
-import 'Auth/AppException.dart';
+import 'AppException.dart';
 import 'GraphQB/graph_qb.dart';
+import 'package:fly_networking/dio/lib/dio.dart';
+
 
 
 class Fly<T> {
@@ -105,7 +106,7 @@ class Fly<T> {
       apiUrl,
       body: jsonEncode(query),
     );
-    Map<String, dynamic> myData = json.decode(response.body);
+    dynamic myData = response.data;
 
     // has error
     if (myData.containsKey("errors")) {
@@ -142,7 +143,7 @@ class Fly<T> {
       apiUrl,
       body: jsonEncode(query),
     );
-    Map<String, dynamic> myData = json.decode(response.body);
+    dynamic myData = response.data;
 
     // has error
     if (myData.containsKey("errors")) {
