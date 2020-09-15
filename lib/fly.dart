@@ -1,39 +1,46 @@
 library fly_networking;
-
 import 'dart:async';
-
 import 'dart:convert';
-
 import 'dart:core';
-
 import 'package:fly_networking/NetworkProvider/APIManager.dart';
-import 'package:http/http.dart';
-
-import 'Auth/AppException.dart';
+import 'AppException.dart';
 import 'GraphQB/graph_qb.dart';
-
+import 'package:flutter/cupertino.dart';
+import 'package:fly_networking/dio/lib/dio.dart';
+import 'dart:io';
 
 class Fly<T> {
   Fly(this._apiURL,
       {Duration timeout = const Duration(seconds: 3),
-        Function onTimeOut,
-        Map headers}) {
+      Function onTimeOut,
+      Map headers}) {
     _apiManager = APIManager();
     _apiManager.setTimeOut(timeout, onTimeOut: onTimeOut ?? () {});
   }
 
   APIManager _apiManager;
   String _apiURL;
+  String _encodedBody;
   // Map<String, Parser> parserMap = {};
+  String link;
   Map<String, String> defaultParams = {};
 
+  void setEncodedBodyFromMap({@required Map<String, dynamic> map}) {
+    _encodedBody = jsonEncode(map);
+  }
+
+  Map<String, String> map = {
+    HttpHeaders.contentTypeHeader: "application/json",
+    HttpHeaders.acceptHeader: "application/json",
+  };
+
   Future<Map<String, dynamic>> query(
-      List<Node> querys, {
-        Map<String, dynamic> qParams,
-        Map<String, dynamic> parsers,
-        String apiURL,
-        Map<String, String> parameters,
-      }) async {
+    List<Node> querys, {
+    Map<String, dynamic> qParams,
+    Map<String, dynamic> parsers,
+    String apiURL,
+    Map<String, String> parameters,
+  }) async {
     Node mainQuery = Node(name: 'query', cols: querys);
 
     Map queryMap = {
@@ -46,10 +53,10 @@ class Fly<T> {
     if (parsers != null) {
       try {
         return results.map((key, value) {
-          if(value is List){
+          if (value is List) {
             return MapEntry(key, parsers[key].dynamicParse(value));
-          }else{
-            print ("INSIDE IS NOOOT "+key);
+          } else {
+            print("INSIDE IS NOOOT " + key);
             return MapEntry(key, parsers[key].parse(value));
           }
         });
@@ -66,12 +73,12 @@ class Fly<T> {
   }
 
   Future<Map<String, dynamic>> mutation(
-      List<Node> mutations, {
-        Map<String, dynamic> qParams,
-        Map<String, Parser<T>> parsers,
-        String apiURL,
-        Map<String, String> parameters,
-      }) async {
+    List<Node> mutations, {
+    Map<String, dynamic> qParams,
+    Map<String, Parser<T>> parsers,
+    String apiURL,
+    Map<String, String> parameters,
+  }) async {
     Node mainQuery = Node(name: 'mutation', cols: mutations);
 
     Map queryMap = {
@@ -87,6 +94,79 @@ class Fly<T> {
       if (!parsers.containsKey(key)) return MapEntry(key, value);
       return MapEntry(key, parsers[key].parse(value));
     });
+  }
+
+  Future<Response> post(String apiPath, {FormData data}) async {
+    try {
+      Uri uri = Uri.parse(link + apiPath);
+      if (uri.scheme == "https") {
+        uri = Uri.https(uri.authority, uri.path);
+      } else {
+        uri = Uri.http(uri.authority, uri.path);
+      }
+      print(uri);
+      data != null ? print(data.fields) : print(_encodedBody);
+      final response = await Dio().post(uri.toString(),
+          data: data != null ? data : _encodedBody,
+          options: Options(headers: map));
+      return response;
+    } on DioError catch (e) {
+      if (e.response != null) {
+        print(e.response.data);
+        print(e.response.headers);
+        print(e.response.request);
+      } else {
+        print(e.response.statusCode);
+      }
+      return null;
+    }
+  }
+
+  Future<Response> get(String apiPath, {Map<String, String> parameter}) async {
+    try {
+      Uri uri = Uri.parse(link + apiPath);
+      if (uri.scheme == "https") {
+        uri = Uri.https(uri.authority, uri.path, parameter);
+      } else {
+        uri = Uri.http(uri.authority, uri.path, parameter);
+      }
+      final response =
+          await Dio().get(uri.toString(), options: Options(headers: map));
+      print(response);
+      return response;
+    } on DioError catch (e) {
+      if (e.response != null) {
+        print(e.response.data);
+        print(e.response.headers);
+        print(e.response.request);
+      } else {
+        print(e.response.statusCode);
+      }
+      return null;
+    }
+  }
+
+  Future<Response> put(String apiPath) async {
+    try {
+      Uri uri = Uri.parse(link + apiPath);
+      if (uri.scheme == "https") {
+        uri = Uri.https(uri.authority, uri.path);
+      } else {
+        uri = Uri.http(uri.authority, uri.path);
+      }
+      final response = await Dio().put(uri.toString(),
+          data: _encodedBody, options: Options(headers: map));
+      return response;
+    } on DioError catch (e) {
+      if (e.response != null) {
+        print(e.response.data);
+        print(e.response.headers);
+        print(e.response.request);
+      } else {
+        print(e.response.statusCode);
+      }
+      return null;
+    }
   }
 
   Future<Map<String, dynamic>> requestWithoutParse(
@@ -105,7 +185,7 @@ class Fly<T> {
       apiUrl,
       body: jsonEncode(query),
     );
-    Map<String, dynamic> myData = json.decode(response.body);
+    dynamic myData = response.data;
 
     // has error
     if (myData.containsKey("errors")) {
@@ -142,7 +222,7 @@ class Fly<T> {
       apiUrl,
       body: jsonEncode(query),
     );
-    Map<String, dynamic> myData = json.decode(response.body);
+    dynamic myData = response.data;
 
     // has error
     if (myData.containsKey("errors")) {
