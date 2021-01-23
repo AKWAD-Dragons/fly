@@ -44,14 +44,18 @@ class Fly<T> {
         query: queryMap, apiUrl: apiURL, parameters: parameters);
     if (parsers != null) {
       try {
-        return results.map((key, value) {
-          if (value is List) {
-            return MapEntry(key, parsers[key].dynamicParse(value));
-          } else {
+        return results.map(
+          (key, value) {
+            if (value is List)
+              return MapEntry(key, parsers[key].dynamicParse(value));
+
+            if (value.containsKey('data'))
+              return MapEntry(key, parsers[key].dynamicParse(value['data']));
+
             print("INSIDE IS NOOOT " + key);
             return MapEntry(key, parsers[key].parse(value));
-          }
-        });
+          },
+        );
       } catch (e) {
         print(e.toString());
         return {};
