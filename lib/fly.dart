@@ -12,12 +12,11 @@ import 'package:http/http.dart';
 import 'Auth/AppException.dart';
 import 'GraphQB/graph_qb.dart';
 
-
 class Fly<T> {
   Fly(this._apiURL,
       {Duration timeout = const Duration(seconds: 3),
-        Function onTimeOut,
-        Map headers}) {
+      Function onTimeOut,
+      Map headers}) {
     _apiManager = APIManager();
     _apiManager.setTimeOut(timeout, onTimeOut: onTimeOut ?? () {});
   }
@@ -28,12 +27,12 @@ class Fly<T> {
   Map<String, String> defaultParams = {};
 
   Future<Map<String, dynamic>> query(
-      List<Node> querys, {
-        Map<String, dynamic> qParams,
-        Map<String, dynamic> parsers,
-        String apiURL,
-        Map<String, String> parameters,
-      }) async {
+    List<Node> querys, {
+    Map<String, dynamic> qParams,
+    Map<String, dynamic> parsers,
+    String apiURL,
+    Map<String, String> parameters,
+  }) async {
     Node mainQuery = Node(name: 'query', cols: querys);
 
     Map queryMap = {
@@ -41,18 +40,22 @@ class Fly<T> {
       "variables": {},
       "query": GraphQB(mainQuery).getQueryFor(args: qParams)
     };
-    Map<String, dynamic> results = await this.requestWithoutParse(
+    Map<String, dynamic> results = await this._requestWithoutParse(
         query: queryMap, apiUrl: apiURL, parameters: parameters);
     if (parsers != null) {
       try {
-        return results.map((key, value) {
-          if(value is List){
-            return MapEntry(key, parsers[key].dynamicParse(value));
-          }else{
-            print ("INSIDE IS NOOOT "+key);
+        return results.map(
+          (key, value) {
+            if (value is List)
+              return MapEntry(key, parsers[key].dynamicParse(value));
+
+            if (value.containsKey('data'))
+              return MapEntry(key, parsers[key].dynamicParse(value['data']));
+
+            print("INSIDE IS NOOOT " + key);
             return MapEntry(key, parsers[key].parse(value));
-          }
-        });
+          },
+        );
       } catch (e) {
         print(e.toString());
         return {};
@@ -66,12 +69,12 @@ class Fly<T> {
   }
 
   Future<Map<String, dynamic>> mutation(
-      List<Node> mutations, {
-        Map<String, dynamic> qParams,
-        Map<String, Parser<T>> parsers,
-        String apiURL,
-        Map<String, String> parameters,
-      }) async {
+    List<Node> mutations, {
+    Map<String, dynamic> qParams,
+    Map<String, Parser<T>> parsers,
+    String apiURL,
+    Map<String, String> parameters,
+  }) async {
     Node mainQuery = Node(name: 'mutation', cols: mutations);
 
     Map queryMap = {
@@ -79,7 +82,7 @@ class Fly<T> {
       "variables": {},
       "query": GraphQB(mainQuery).getQueryFor(args: qParams)
     };
-    Map<String, dynamic> results = await this.requestWithoutParse(
+    Map<String, dynamic> results = await this._requestWithoutParse(
         query: queryMap, apiUrl: apiURL, parameters: parameters);
     if (parsers == null || parsers.length == 0 || results == null)
       return results;
@@ -89,7 +92,7 @@ class Fly<T> {
     });
   }
 
-  Future<Map<String, dynamic>> requestWithoutParse(
+  Future<Map<String, dynamic>> _requestWithoutParse(
       {String apiUrl, dynamic query, Map<String, String> parameters}) async {
     if (_apiURL == null && apiUrl == null) {
       throw ("apiUrl is not set! call init or add apiUrl in request");
