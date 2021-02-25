@@ -13,3 +13,11 @@
 ## 2.0.2
 
 * Fixed dynamic Parse forEach generic type issue in fly
+
+## 2.0.3
+
+* Supported arguments of type double in Query Builder
+
+## 2.0.4
+
+* Fixed mutation parser

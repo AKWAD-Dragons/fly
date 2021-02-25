@@ -84,7 +84,9 @@ class Node {
       parsed += "]";
     } else if (arg is int) {
       parsed = "$arg";
-    } else if (arg is bool) {
+    } else if (arg is double) {
+      parsed = "$arg";
+    }else if (arg is bool) {
       parsed = "$arg";
     } else if (arg is String && arg.substring(0, 1) == "_") {
       parsed = "${arg.substring(1, arg.length)}";
