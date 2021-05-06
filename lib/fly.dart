@@ -7,9 +7,10 @@ import 'dart:convert';
 import 'dart:core';
 
 import 'package:fly_networking/NetworkProvider/APIManager.dart';
+import 'package:fly_networking/NetworkProvider/APIManager_Web.dart';
 import 'package:http/http.dart';
-
-import 'Auth/AppException.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'AppException.dart';
 import 'GraphQB/graph_qb.dart';
 
 class Fly<T> {
@@ -18,11 +19,15 @@ class Fly<T> {
       Function onTimeOut,
       Map headers}) {
     _apiManager = APIManager();
+    _webAPIManager = WebAPIManager();
+    ;
     _apiManager.setTimeOut(timeout, onTimeOut: onTimeOut ?? () {});
   }
 
   APIManager _apiManager;
+  WebAPIManager _webAPIManager;
   String _apiURL;
+
   // Map<String, Parser> parserMap = {};
   Map<String, String> defaultParams = {};
 
@@ -69,6 +74,7 @@ class Fly<T> {
 
   void addHeaders(Map<String, String> headers) {
     _apiManager.setHeaders(headers);
+    _webAPIManager.setHeaders(headers);
   }
 
   Future<Map<String, dynamic>> mutation(
@@ -105,10 +111,20 @@ class Fly<T> {
       parameters = defaultParams;
     }
 
-    Response response = await _apiManager.post(
-      apiUrl,
-      body: jsonEncode(query),
-    );
+    Response response;
+
+    if (kIsWeb) {
+      response = await _webAPIManager.post(
+        apiUrl,
+        body: jsonEncode(query),
+      );
+    } else {
+      response = await _apiManager.post(
+        apiUrl,
+        body: jsonEncode(query),
+      );
+    }
+
     Map<String, dynamic> myData = json.decode(response.body);
 
     // has error
@@ -142,10 +158,19 @@ class Fly<T> {
       parameters = defaultParams;
     }
 
-    Response response = await _apiManager.post(
-      apiUrl,
-      body: jsonEncode(query),
-    );
+    Response response;
+    if (kIsWeb) {
+      response = await _webAPIManager.post(
+        apiUrl,
+        body: jsonEncode(query),
+      );
+    } else {
+      response = await _apiManager.post(
+        apiUrl,
+        body: jsonEncode(query),
+      );
+    }
+
     Map<String, dynamic> myData = json.decode(response.body);
 
     // has error
@@ -173,6 +198,7 @@ class Fly<T> {
 
 abstract class Parser<T> {
   List<String> querys;
+
   T parse(dynamic data);
 
   dynamic dynamicParse(dynamic data) {

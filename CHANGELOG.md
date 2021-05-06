@@ -21,3 +21,11 @@
 ## 2.0.4
 
 * Fixed mutation parser
+
+## 2.0.5
+
+* Removed redundant code
+
+## 2.0.6-pre.1
+
+* Added web support
