@@ -7,12 +7,10 @@ import 'package:fly_networking/http_middleware/models/response_data.dart';
 class Logger {
   final LogLevel logLevel;
 
-  Logger({this.logLevel});
+  Logger({this.logLevel = LogLevel.NONE});
 
-  void logRequest({RequestData data}) {
-    if (logLevel == LogLevel.NONE) {
-      return;
-    }
+  void logRequest(RequestData data) {
+    if (logLevel == LogLevel.NONE) return;
 
     String method = data.method.toString().split(".")[1];
 
@@ -31,7 +29,7 @@ class Logger {
       print("--> ${data.method.toString().split(".")[1]} ${data.url}");
 
       print("HEADERS:");
-      Map<String, String> headers = data.headers;
+      Map<String, String>? headers = data.headers;
       if (headers == null || headers.length == 0) {
         print("Request has no headers.");
       } else {
@@ -54,10 +52,8 @@ class Logger {
     print("--> END $method\n");
   }
 
-  void logResponse({ResponseData data}) {
-    if (logLevel == LogLevel.NONE) {
-      return;
-    }
+  void logResponse(ResponseData data) {
+    if (logLevel == LogLevel.NONE) return;
 
     if (logLevel == LogLevel.BASIC) {
       print("<-- ${data.statusCode} (${data.contentLength}-byte Body)");
@@ -74,7 +70,7 @@ class Logger {
     if (logHeaders) {
       print("URL: ${data.url}");
       print("HEADERS:");
-      Map<String, String> headers = data.headers;
+      Map<String, String>? headers = data.headers;
       if (headers == null || headers.length == 0) {
         print("Request has no headers.");
       } else {

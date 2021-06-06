@@ -1,9 +1,7 @@
 library fly_networking;
 
 import 'dart:async';
-
 import 'dart:convert';
-
 import 'dart:core';
 
 import 'package:fly_networking/NetworkProvider/APIManager.dart';
@@ -20,7 +18,6 @@ class Fly<T> {
       Map headers}) {
     _apiManager = APIManager();
     _webAPIManager = WebAPIManager();
-    ;
     _apiManager.setTimeOut(timeout, onTimeOut: onTimeOut ?? () {});
   }
 

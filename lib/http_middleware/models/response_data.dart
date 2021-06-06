@@ -6,21 +6,21 @@ class ResponseData {
   String url;
   int statusCode;
   Method method;
-  Map<String, String> headers;
-  String body;
-  int contentLength;
+  Map<String, String>? headers;
+  String? body;
+  int? contentLength;
   bool isRedirect;
   bool persistentConnection;
 
   ResponseData({
-    this.method,
-    this.url,
-    this.statusCode,
+    required this.method,
+    required this.url,
+    required this.statusCode,
     this.headers,
     this.body,
     this.contentLength,
-    this.isRedirect,
-    this.persistentConnection,
+    required this.isRedirect,
+    required this.persistentConnection,
   });
 
   factory ResponseData.fromHttpResponse(Response response) {

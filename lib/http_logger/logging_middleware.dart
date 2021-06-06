@@ -7,7 +7,7 @@ import 'logger.dart';
 
 class HttpLogger implements MiddlewareContract {
   LogLevel logLevel;
-  Logger logger;
+  late Logger logger;
 
   HttpLogger({
     this.logLevel: LogLevel.BODY,
@@ -16,12 +16,12 @@ class HttpLogger implements MiddlewareContract {
   }
 
   @override
-  void interceptRequest({RequestData data}) {
-    logger.logRequest(data: data);
+  void interceptRequest(RequestData data) {
+    logger.logRequest(data);
   }
 
   @override
-  void interceptResponse({ResponseData data}) {
-    logger.logResponse(data: data);
+  void interceptResponse(ResponseData data) {
+    logger.logResponse(data);
   }
 }
