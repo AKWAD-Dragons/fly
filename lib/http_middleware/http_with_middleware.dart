@@ -45,16 +45,16 @@ class HttpWithMiddleware {
         middlewares: middlewares, requestTimeout: requestTimeout);
   }
 
-  Future<Response> head(url, {Map<String, String> headers}) {
-    _sendInterception(method: Method.HEAD, headers: headers, url: url);
-    return _withClient((client) => client.head(url, headers: headers));
-  }
+  // Future<Response> head(url, {Map<String, String> headers}) {
+  //   _sendInterception(method: Method.HEAD, headers: headers, url: url);
+  //   return _withClient((client) => client.head(url, headers: headers));
+  // }
 
-  Future<Response> get(url, {Map<String, String> headers}) {
-    RequestData data =
-        _sendInterception(method: Method.GET, headers: headers, url: url);
-    return _withClient((client) => client.get(data.url, headers: data.headers));
-  }
+  // Future<Response> get(url, {Map<String, String> headers}) {
+  //   RequestData data =
+  //       _sendInterception(method: Method.GET, headers: headers, url: url);
+  //   return _withClient((client) => client.get(data.url, headers: data.headers));
+  // }
 
   Future<Response> post(url,
       {Map<String, String> headers, body, Encoding encoding}) {
@@ -64,44 +64,44 @@ class HttpWithMiddleware {
         url: url,
         body: body,
         encoding: encoding);
-    return _withClient((client) => client.post(data.url,
+    return _withClient((client) => client.post(Uri.parse(data.url),
         headers: data.headers, body: data.body, encoding: data.encoding));
   }
 
-  Future<Response> put(url,
-      {Map<String, String> headers, body, Encoding encoding}) {
-    RequestData data = _sendInterception(
-        method: Method.PUT,
-        headers: headers,
-        url: url,
-        body: body,
-        encoding: encoding);
-    return _withClient((client) => client.put(data.url,
-        headers: headers, body: data.body, encoding: data.encoding));
-  }
+  // Future<Response> put(url,
+  //     {Map<String, String> headers, body, Encoding encoding}) {
+  //   RequestData data = _sendInterception(
+  //       method: Method.PUT,
+  //       headers: headers,
+  //       url: url,
+  //       body: body,
+  //       encoding: encoding);
+  //   return _withClient((client) => client.put(data.url,
+  //       headers: headers, body: data.body, encoding: data.encoding));
+  // }
 
-  Future<Response> patch(url,
-      {Map<String, String> headers, body, Encoding encoding}) {
-    RequestData data = _sendInterception(
-        method: Method.PATCH,
-        headers: headers,
-        url: url,
-        body: body,
-        encoding: encoding);
-    return _withClient((client) => client.patch(data.url,
-        headers: data.headers, body: data.body, encoding: data.encoding));
-  }
+  // Future<Response> patch(url,
+  //     {Map<String, String> headers, body, Encoding encoding}) {
+  //   RequestData data = _sendInterception(
+  //       method: Method.PATCH,
+  //       headers: headers,
+  //       url: url,
+  //       body: body,
+  //       encoding: encoding);
+  //   return _withClient((client) => client.patch(data.url,
+  //       headers: data.headers, body: data.body, encoding: data.encoding));
+  // }
 
-  Future<Response> delete(url, {Map<String, String> headers}) {
-    RequestData data =
-        _sendInterception(method: Method.DELETE, headers: headers, url: url);
-    return _withClient(
-        (client) => client.delete(data.url, headers: data.headers));
-  }
+  // Future<Response> delete(url, {Map<String, String> headers}) {
+  //   RequestData data =
+  //       _sendInterception(method: Method.DELETE, headers: headers, url: url);
+  //   return _withClient(
+  //       (client) => client.delete(data.url, headers: data.headers));
+  // }
 
-  Future<String> read(url, {Map<String, String> headers}) {
-    return _withClient((client) => client.read(url, headers: headers));
-  }
+  // Future<String> read(url, {Map<String, String> headers}) {
+  //   return _withClient((client) => client.read(url, headers: headers));
+  // }
 
   Future<Uint8List> readBytes(url, {Map<String, String> headers}) =>
       _withClient((client) => client.readBytes(url, headers: headers));

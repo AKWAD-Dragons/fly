@@ -1,9 +1,9 @@
+import 'package:fly_networking/http_middleware/middleware_contract.dart';
+import 'package:fly_networking/http_middleware/models/request_data.dart';
+import 'package:fly_networking/http_middleware/models/response_data.dart';
 
-import 'package:fly_networking/http_logger-1.0.0/log_level.dart';
-import 'package:fly_networking/http_logger-1.0.0/logger.dart';
-import 'package:fly_networking/http_middleware-1.0.0/middleware_contract.dart';
-import 'package:fly_networking/http_middleware-1.0.0/models/request_data.dart';
-import 'package:fly_networking/http_middleware-1.0.0/models/response_data.dart';
+import 'log_level.dart';
+import 'logger.dart';
 
 class HttpLogger implements MiddlewareContract {
   LogLevel logLevel;

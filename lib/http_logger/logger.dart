@@ -1,15 +1,13 @@
 import 'dart:convert';
 
-import 'package:fly_networking/http_logger-1.0.0/log_level.dart';
-import 'package:fly_networking/http_middleware-1.0.0/models/request_data.dart';
-import 'package:fly_networking/http_middleware-1.0.0/models/response_data.dart';
+import 'package:fly_networking/http_logger/log_level.dart';
+import 'package:fly_networking/http_middleware/models/request_data.dart';
+import 'package:fly_networking/http_middleware/models/response_data.dart';
 
 class Logger {
   final LogLevel logLevel;
 
-  Logger({
-    this.logLevel,
-  });
+  Logger({this.logLevel});
 
   void logRequest({RequestData data}) {
     if (logLevel == LogLevel.NONE) {
@@ -22,8 +20,7 @@ class Logger {
         data.body != null ? (utf8.encode(data.body.toString()).length) : 0;
 
     if (logLevel == LogLevel.BASIC) {
-      print("--> ${method} ${data
-          .url} (${bodyInBytes}-byte Body)");
+      print("--> $method ${data.url} ($bodyInBytes-byte Body)");
       return;
     }
 
@@ -31,8 +28,7 @@ class Logger {
     bool logHeaders = logBody || logLevel == LogLevel.HEADERS;
 
     if (logHeaders) {
-      print("--> ${data.method.toString().split(".")[1]} ${data
-          .url}");
+      print("--> ${data.method.toString().split(".")[1]} ${data.url}");
 
       print("HEADERS:");
       Map<String, String> headers = data.headers;
@@ -55,7 +51,7 @@ class Logger {
       }
     }
 
-    print("--> END ${method}\n");
+    print("--> END $method\n");
   }
 
   void logResponse({ResponseData data}) {
@@ -70,7 +66,7 @@ class Logger {
 
     String method = data.method.toString().split(".")[1];
 
-    print("<-- ${method} ${data.statusCode}");
+    print("<-- $method ${data.statusCode}");
 
     bool logBody = logLevel == LogLevel.BODY;
     bool logHeaders = logBody || logLevel == LogLevel.HEADERS;
