@@ -9,11 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  http: ^0.12.2
-  collection: ^1.14.12
-  shared_preferences: ^0.5.7+1
-  google_sign_in: ^4.3.0
-  get_it: ^4.0.1
+  http: ^0.13.3
 
 
 dev_dependencies:
