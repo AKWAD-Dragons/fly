@@ -11,40 +11,39 @@ class GraphQB {
 
   // Map<String, String> _namedQueries = {};
   final Node query;
-  String stringQuery;
+  late String stringQuery;
   // void addNamedQuery(String queryName, String query) {
   //   _namedQueries[queryName] = query;
   //   print(query);
   // }
 
-  String getQueryFor({Map<String, dynamic> args}) {
+  String getQueryFor({Map<String, dynamic>? args}) {
     if (args == null) return this.stringQuery;
     args.forEach((String key, dynamic val) {
       this.stringQuery = stringQuery.replaceAll("##$key##", val);
     });
-    // print(query);
     return this.stringQuery;
   }
 }
 
 class Node {
   final String name;
-  final Map<String, dynamic> args;
-  final List<dynamic> cols;
+  final Map<String, dynamic>? args;
+  final List<dynamic>? cols;
+  Node({required this.name, this.args, this.cols});
 
-  Node({@required this.name, this.args, this.cols});
   void appendArg(String key, dynamic val) {
-    args[key] = val;
+    if (args != null) args![key] = val;
   }
 
   @override
   String toString() {
     String nodeStr = "";
     nodeStr = name;
-    if (args != null && args.isNotEmpty) {
+    if (args != null && args!.isNotEmpty) {
       nodeStr += "(";
 
-      args.forEach((String key, dynamic val) {
+      args!.forEach((String key, dynamic val) {
         nodeStr += "$key: ${this.parseArgs(val)} ,";
       });
 
@@ -52,9 +51,9 @@ class Node {
 
       nodeStr += ")";
     }
-    if (cols != null && cols.isNotEmpty) {
+    if (cols != null && cols!.isNotEmpty) {
       nodeStr += "{\n";
-      cols.forEach((dynamic col) {
+      cols!.forEach((dynamic col) {
         nodeStr += col.toString() + "\n";
       });
       nodeStr += "}";
@@ -86,7 +85,7 @@ class Node {
       parsed = "$arg";
     } else if (arg is double) {
       parsed = "$arg";
-    }else if (arg is bool) {
+    } else if (arg is bool) {
       parsed = "$arg";
     } else if (arg is String && arg.substring(0, 1) == "_") {
       parsed = "${arg.substring(1, arg.length)}";
