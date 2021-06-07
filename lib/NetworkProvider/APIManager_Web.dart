@@ -5,17 +5,10 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 
 class WebAPIManager {
-  Duration _timeout;
-  Function _timeoutFunc;
   Map<String, String> map = {
     HttpHeaders.contentTypeHeader: "application/json",
     HttpHeaders.acceptHeader: "application/json"
   };
-
-  void setTimeOut(Duration duration, {Function onTimeOut}) {
-    _timeout = duration;
-    if (onTimeOut != null) _timeoutFunc = onTimeOut;
-  }
 
   // APIManager({Map headerMap}){
   //   map.addAll(headerMap);
@@ -27,10 +20,10 @@ class WebAPIManager {
     map.addAll(headers);
   }
 
-  Future<http.Response> post(
-      String apiPath, {
-        String body,
-      }) async {
+  Future<http.Response?> post(
+    String apiPath, {
+    String? body,
+  }) async {
     try {
       _setMiddleWares();
 
