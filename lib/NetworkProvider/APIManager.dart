@@ -8,51 +8,39 @@ import 'package:fly_networking/http_middleware/http_client_with_middleware.dart'
 import 'package:http/http.dart' show Response;
 
 class APIManager {
-  HttpClientWithMiddleware _client;
-  Duration _timeout;
-  Function _timeoutFunc;
+  late HttpClientWithMiddleware _client;
+  // Duration _timeout;
+  // Function _timeoutFunc;
   Map<String, String> map = {
     HttpHeaders.contentTypeHeader: "application/json",
     HttpHeaders.acceptHeader: "application/json"
   };
-
-  void setTimeOut(Duration duration, {Function onTimeOut}) {
-    _timeout = duration;
-    if (onTimeOut != null) _timeoutFunc = onTimeOut;
-  }
 
   // APIManager({Map headerMap}){
   //   map.addAll(headerMap);
   // }
 
   void _setMiddleWares() {
-    if (_client == null) {
-      _client = HttpClientWithMiddleware.build(middlewares: [
-        HttpLogger(logLevel: LogLevel.BODY),
-      ]);
-    }
+    _client = HttpClientWithMiddleware.build(
+        middlewares: [HttpLogger(logLevel: LogLevel.BODY)]);
   }
 
   void setHeaders(Map<String, String> headers) {
     map.addAll(headers);
   }
 
-  Future<Response> post(
-    String apiPath, {
-    String body,
-  }) async {
+  Future<Response?> post(String apiPath, {required String body}) async {
     try {
       _setMiddleWares();
 
       Uri uri = Uri.parse(apiPath);
-      if (uri.scheme == "https") {
+      if (uri.scheme == "https")
         uri = Uri.https(uri.authority, uri.path);
-      } else {
+      else
         uri = Uri.http(uri.authority, uri.path);
-      }
 
-      final response = await _client.post(uri, body: body, headers: map);
-      // .timeout(_timeout, onTimeout: _timeoutFunc);
+      final Response response =
+          await _client.post(uri, body: body, headers: map);
 
       return response;
     } catch (e) {
