@@ -30,8 +30,8 @@ class ResponseData {
       body: response.body,
       contentLength: response.contentLength,
       isRedirect: response.isRedirect,
-      url: response.request.url.toString(),
-      method: methodFromString(response.request.method),
+      url: response.request!.url.toString(),
+      method: methodFromString(response.request!.method),
       persistentConnection: response.persistentConnection,
     );
   }

@@ -21,6 +21,7 @@ Method methodFromString(String method) {
       return Method.PATCH;
     case "DELETE":
       return Method.DELETE;
+    default:
+      return Method.GET;
   }
-  return null;
 }

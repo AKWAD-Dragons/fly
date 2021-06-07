@@ -31,49 +31,19 @@ import 'middleware_contract.dart';
 ///the connection alive with the server.
 class HttpClientWithMiddleware extends http.BaseClient {
   List<MiddlewareContract> middlewares;
-  Duration requestTimeout;
-
   final IOClient _client = IOClient();
 
-  HttpClientWithMiddleware._internal({this.middlewares, this.requestTimeout});
+  HttpClientWithMiddleware._internal({required this.middlewares});
 
-  factory HttpClientWithMiddleware.build({
-    List<MiddlewareContract> middlewares,
-    Duration requestTimeout,
-  }) {
+  factory HttpClientWithMiddleware.build(
+      {required List<MiddlewareContract?> middlewares}) {
     //Remove any value that is null.
-    middlewares?.removeWhere((middleware) => middleware == null);
+    middlewares.removeWhere((middleware) => middleware == null);
     return HttpClientWithMiddleware._internal(
-      middlewares: middlewares,
-      requestTimeout: requestTimeout,
-    );
-  }
-
-  Future<String> read(url, {Map<String, String> headers}) {
-    return get(url, headers: headers).then((response) {
-      _checkResponseSuccess(url, response);
-      return response.body;
-    });
-  }
-
-  Future<Uint8List> readBytes(url, {Map<String, String> headers}) {
-    return get(url, headers: headers).then((response) {
-      _checkResponseSuccess(url, response);
-      return response.bodyBytes;
-    });
+        middlewares: middlewares as List<MiddlewareContract>);
   }
 
   Future<StreamedResponse> send(BaseRequest request) => _client.send(request);
-
-  void _checkResponseSuccess(url, Response response) {
-    if (response.statusCode < 400) return;
-    var message = "Request to $url failed with status ${response.statusCode}";
-    if (response.reasonPhrase != null) {
-      message = "$message: ${response.reasonPhrase}";
-    }
-    if (url is String) url = Uri.parse(url);
-    throw new ClientException("$message.", url);
-  }
 
   void close() {
     _client.close();

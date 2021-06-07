@@ -28,36 +28,20 @@ import 'models/response_data.dart';
 ///```
 class HttpWithMiddleware {
   List<MiddlewareContract> middlewares;
-  Duration requestTimeout;
 
-  HttpWithMiddleware._internal({
-    this.middlewares,
-    this.requestTimeout,
-  });
+  HttpWithMiddleware._internal({required this.middlewares});
 
-  factory HttpWithMiddleware.build({
-    List<MiddlewareContract> middlewares,
-    Duration requestTimeout,
-  }) {
+  factory HttpWithMiddleware.build(
+      {required List<MiddlewareContract?> middlewares}) {
     //Remove any value that is null.
-    middlewares?.removeWhere((middleware) => middleware == null);
+    middlewares.removeWhere((middleware) => middleware == null);
+
     return new HttpWithMiddleware._internal(
-        middlewares: middlewares, requestTimeout: requestTimeout);
+        middlewares: middlewares as List<MiddlewareContract>);
   }
 
-  // Future<Response> head(url, {Map<String, String> headers}) {
-  //   _sendInterception(method: Method.HEAD, headers: headers, url: url);
-  //   return _withClient((client) => client.head(url, headers: headers));
-  // }
-
-  // Future<Response> get(url, {Map<String, String> headers}) {
-  //   RequestData data =
-  //       _sendInterception(method: Method.GET, headers: headers, url: url);
-  //   return _withClient((client) => client.get(data.url, headers: data.headers));
-  // }
-
   Future<Response> post(url,
-      {Map<String, String> headers, body, Encoding encoding}) {
+      {Map<String, String>? headers, required body, Encoding? encoding}) {
     RequestData data = _sendInterception(
         method: Method.POST,
         headers: headers,
@@ -68,58 +52,23 @@ class HttpWithMiddleware {
         headers: data.headers, body: data.body, encoding: data.encoding));
   }
 
-  // Future<Response> put(url,
-  //     {Map<String, String> headers, body, Encoding encoding}) {
-  //   RequestData data = _sendInterception(
-  //       method: Method.PUT,
-  //       headers: headers,
-  //       url: url,
-  //       body: body,
-  //       encoding: encoding);
-  //   return _withClient((client) => client.put(data.url,
-  //       headers: headers, body: data.body, encoding: data.encoding));
-  // }
-
-  // Future<Response> patch(url,
-  //     {Map<String, String> headers, body, Encoding encoding}) {
-  //   RequestData data = _sendInterception(
-  //       method: Method.PATCH,
-  //       headers: headers,
-  //       url: url,
-  //       body: body,
-  //       encoding: encoding);
-  //   return _withClient((client) => client.patch(data.url,
-  //       headers: data.headers, body: data.body, encoding: data.encoding));
-  // }
-
-  // Future<Response> delete(url, {Map<String, String> headers}) {
-  //   RequestData data =
-  //       _sendInterception(method: Method.DELETE, headers: headers, url: url);
-  //   return _withClient(
-  //       (client) => client.delete(data.url, headers: data.headers));
-  // }
-
-  // Future<String> read(url, {Map<String, String> headers}) {
-  //   return _withClient((client) => client.read(url, headers: headers));
-  // }
-
-  Future<Uint8List> readBytes(url, {Map<String, String> headers}) =>
+  Future<Uint8List> readBytes(url, {Map<String, String>? headers}) =>
       _withClient((client) => client.readBytes(url, headers: headers));
 
   RequestData _sendInterception(
-      {Method method,
-      Encoding encoding,
-      dynamic body,
-      String url,
-      Map<String, String> headers}) {
+      {required Method method,
+      Encoding? encoding,
+      required dynamic body,
+      required String url,
+      Map<String, String>? headers}) {
     RequestData data = RequestData(
-        method: method,
-        encoding: encoding,
-        body: body,
-        url: url,
-        headers: headers ?? <String, String>{});
-    middlewares
-        ?.forEach((middleware) => middleware.interceptRequest(data: data));
+      method: method,
+      encoding: encoding,
+      body: body,
+      url: url,
+      headers: headers,
+    );
+    middlewares.forEach((middleware) => middleware.interceptRequest(data));
     return data;
   }
 
@@ -131,7 +80,7 @@ class HttpWithMiddleware {
           : await fn(client).timeout(requestTimeout);
       if (response is Response) {
         var responseData = ResponseData.fromHttpResponse(response);
-        middlewares?.forEach(
+        middlewares.forEach(
             (middleware) => middleware.interceptResponse(data: responseData));
 
         Response resultResponse = Response(
