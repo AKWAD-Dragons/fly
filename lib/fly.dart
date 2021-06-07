@@ -12,17 +12,10 @@ import 'AppException.dart';
 import 'GraphQB/graph_qb.dart';
 
 class Fly<T> {
-  Fly(this._apiURL,
-      {Duration timeout = const Duration(seconds: 3),
-      Function onTimeOut,
-      Map headers}) {
-    _apiManager = APIManager();
-    _webAPIManager = WebAPIManager();
-    _apiManager.setTimeOut(timeout, onTimeOut: onTimeOut ?? () {});
-  }
+  Fly(this._apiURL);
 
-  APIManager _apiManager;
-  WebAPIManager _webAPIManager;
+  late APIManager _apiManager = APIManager();
+  late WebAPIManager _webAPIManager = WebAPIManager();
   String _apiURL;
 
   // Map<String, Parser> parserMap = {};
@@ -42,6 +35,7 @@ class Fly<T> {
       "variables": {},
       "query": GraphQB(mainQuery).getQueryFor(args: qParams)
     };
+
     Map<String, dynamic> results = await this.requestWithoutParse(
         query: queryMap, apiUrl: apiURL, parameters: parameters);
 
@@ -97,18 +91,13 @@ class Fly<T> {
   }
 
   Future<Map<String, dynamic>> requestWithoutParse(
-      {String apiUrl, dynamic query, Map<String, String> parameters}) async {
-    if (_apiURL == null && apiUrl == null) {
-      throw ("apiUrl is not set! call init or add apiUrl in request");
-    }
-    if (apiUrl == null) {
-      apiUrl = _apiURL;
-    }
-    if (parameters == null) {
-      parameters = defaultParams;
-    }
+      {String? apiUrl,
+      required dynamic query,
+      Map<String, String>? parameters}) async {
+    if (apiUrl == null) apiUrl = _apiURL;
+    if (parameters == null) parameters = defaultParams;
 
-    Response response;
+    Response? response;
 
     if (kIsWeb) {
       response = await _webAPIManager.post(
@@ -122,18 +111,26 @@ class Fly<T> {
       );
     }
 
-    Map<String, dynamic> myData = json.decode(response.body);
+    if (response == null)
+      throw AppException(true,
+          beautifulMsg: 'Error occured',
+          name: "Server Error",
+          code: 0,
+          uglyMsg: "No response from server");
 
+    Map<String, dynamic> myData = json.decode(response.body);
     // has error
     if (myData.containsKey("errors")) {
-      String error = myData['errors'][0]['message'];
-      String trace = myData['errors'][0]['trace'].toString();
+      String? error = myData['errors'][0]['message'];
+      String? trace = myData['errors'][0]['trace'].toString();
       int code = myData['errors'][0]['extensions']['code'];
-      throw AppException(true,
-          beautifulMsg: error ?? 'Error occured',
-          name: "Server Error",
-          code: code,
-          uglyMsg: trace);
+      throw AppException(
+        true,
+        beautifulMsg: error ?? 'Error occured',
+        name: "Server Error",
+        code: code,
+        uglyMsg: trace,
+      );
     }
 
     return myData['data'];
