@@ -48,12 +48,13 @@ class HttpWithMiddleware {
         url: url,
         body: body,
         encoding: encoding);
-    return _withClient((client) => client.post(Uri.parse(data.url),
+    return _withClient<Response>((client) => client.post(Uri.parse(data.url),
         headers: data.headers, body: data.body, encoding: data.encoding));
   }
 
   Future<Uint8List> readBytes(url, {Map<String, String>? headers}) =>
-      _withClient((client) => client.readBytes(url, headers: headers));
+      _withClient<Uint8List>(
+          (client) => client.readBytes(url, headers: headers));
 
   RequestData _sendInterception(
       {required Method method,
@@ -75,18 +76,17 @@ class HttpWithMiddleware {
   Future<T> _withClient<T>(Future<T> fn(Client client)) async {
     var client = new Client();
     try {
-      T response = requestTimeout == null
-          ? await fn(client)
-          : await fn(client).timeout(requestTimeout);
+      T response = await fn(client);
+
       if (response is Response) {
-        var responseData = ResponseData.fromHttpResponse(response);
+        ResponseData responseData = ResponseData.fromHttpResponse(response);
         middlewares.forEach(
-            (middleware) => middleware.interceptResponse(data: responseData));
+            (middleware) => middleware.interceptResponse(responseData));
 
         Response resultResponse = Response(
           responseData.body,
           responseData.statusCode,
-          headers: responseData.headers,
+          headers: responseData.headers ?? {},
           persistentConnection: responseData.persistentConnection,
           isRedirect: responseData.isRedirect,
           request: Request(

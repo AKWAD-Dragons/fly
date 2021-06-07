@@ -7,7 +7,7 @@ class ResponseData {
   int statusCode;
   Method method;
   Map<String, String>? headers;
-  String? body;
+  String body;
   int? contentLength;
   bool isRedirect;
   bool persistentConnection;
@@ -17,7 +17,7 @@ class ResponseData {
     required this.url,
     required this.statusCode,
     this.headers,
-    this.body,
+    required this.body,
     this.contentLength,
     required this.isRedirect,
     required this.persistentConnection,
