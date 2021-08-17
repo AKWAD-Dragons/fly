@@ -6,33 +6,28 @@ import 'dart:convert';
 
 import 'dart:core';
 
+import 'package:fly_networking/AppException.dart';
 import 'package:fly_networking/NetworkProvider/APIManager.dart';
-import 'package:fly_networking/NetworkProvider/APIManager_Web.dart';
 import 'package:http/http.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
-import 'AppException.dart';
+
 import 'GraphQB/graph_qb.dart';
 
 class Fly<T> {
   Fly(this._apiURL,
       {Duration timeout = const Duration(seconds: 3),
-      Function onTimeOut,
-      Map headers}) {
+        Function onTimeOut,
+        Map headers}) {
     _apiManager = APIManager();
-    _webAPIManager = WebAPIManager();
-    ;
     _apiManager.setTimeOut(timeout, onTimeOut: onTimeOut ?? () {});
   }
 
   APIManager _apiManager;
-  WebAPIManager _webAPIManager;
   String _apiURL;
 
   // Map<String, Parser> parserMap = {};
   Map<String, String> defaultParams = {};
 
-  Future<Map<String, dynamic>> query(
-    List<Node> querys, {
+  Future<Map<String, dynamic>> query(List<Node> querys, {
     Map<String, dynamic> qParams,
     Map<String, dynamic> parsers,
     String apiURL,
@@ -53,8 +48,8 @@ class Fly<T> {
     return results;
   }
 
-  Map<String, dynamic> _parseResults(
-      Map<String, dynamic> results, Map<String, dynamic> parsers) {
+  Map<String, dynamic> _parseResults(Map<String, dynamic> results,
+      Map<String, dynamic> parsers) {
     try {
       return results.map((key, value) {
         if (!parsers.containsKey(key)) return MapEntry(key, value);
@@ -74,11 +69,9 @@ class Fly<T> {
 
   void addHeaders(Map<String, String> headers) {
     _apiManager.setHeaders(headers);
-    _webAPIManager.setHeaders(headers);
   }
 
-  Future<Map<String, dynamic>> mutation(
-    List<Node> mutations, {
+  Future<Map<String, dynamic>> mutation(List<Node> mutations, {
     Map<String, dynamic> qParams,
     Map<String, Parser<T>> parsers,
     String apiURL,
@@ -111,18 +104,13 @@ class Fly<T> {
       parameters = defaultParams;
     }
 
-    Response response;
+    Response response = await _apiManager.post(
+      apiUrl,
+      body: jsonEncode(query),
+    );
 
-    if (kIsWeb) {
-      response = await _webAPIManager.post(
-        apiUrl,
-        body: jsonEncode(query),
-      );
-    } else {
-      response = await _apiManager.post(
-        apiUrl,
-        body: jsonEncode(query),
-      );
+    if (response.statusCode > 400) {
+      throw AppException(true, code: response.statusCode);
     }
 
     Map<String, dynamic> myData = json.decode(response.body);
@@ -130,13 +118,11 @@ class Fly<T> {
     // has error
     if (myData.containsKey("errors")) {
       String error = myData['errors'][0]['message'];
-      String trace = myData['errors'][0]['trace'].toString();
-      int code = myData['errors'][0]['extensions']['code'];
+      //String trace = myData['errors'][0]['trace'].toString();
+      //int code = myData['errors'][0]['extensions']['code'];
       throw AppException(true,
           beautifulMsg: error ?? 'Error occured',
-          name: "Server Error",
-          code: code,
-          uglyMsg: trace);
+          name: "Server Error");
     }
 
     return myData['data'];
@@ -158,19 +144,10 @@ class Fly<T> {
       parameters = defaultParams;
     }
 
-    Response response;
-    if (kIsWeb) {
-      response = await _webAPIManager.post(
-        apiUrl,
-        body: jsonEncode(query),
-      );
-    } else {
-      response = await _apiManager.post(
-        apiUrl,
-        body: jsonEncode(query),
-      );
-    }
-
+    Response response = await _apiManager.post(
+      apiUrl,
+      body: jsonEncode(query),
+    );
     Map<String, dynamic> myData = json.decode(response.body);
 
     // has error

@@ -29,3 +29,7 @@
 ## 2.0.6-pre.1
 
 * Added web support
+
+## 2.0.6-pre.2
+
+* Added more exceptions support
