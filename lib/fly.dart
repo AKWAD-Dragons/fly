@@ -29,7 +29,7 @@ class Fly<T> {
     Map<String, String>? parameters,
   }) async =>
       await graphMethod(
-        methodName: 'mutation',
+        methodName: 'query',
         mainQueryCols: querys,
         qParams: qParams,
         parsers: parsers,
