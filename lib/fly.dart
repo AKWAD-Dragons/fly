@@ -21,7 +21,7 @@ class Fly<T> {
   // Map<String, Parser> parserMap = {};
   Map<String, String> defaultParams = {};
 
-  Future<Map<String, dynamic>> query(
+  Future<Map<String, dynamic>?> query(
     List<Node> querys, {
     Map<String, dynamic>? qParams,
     Map<String, dynamic>? parsers,
@@ -37,7 +37,7 @@ class Fly<T> {
         parameters: parameters,
       );
 
-  Future<Map<String, dynamic>> mutation(
+  Future<Map<String, dynamic>?> mutation(
     List<Node> mutations, {
     Map<String, dynamic>? qParams,
     Map<String, dynamic>? parsers,
@@ -53,7 +53,7 @@ class Fly<T> {
         parameters: parameters,
       );
 
-  Future<Map<String, dynamic>> graphMethod({
+  Future<Map<String, dynamic>?> graphMethod({
     required String methodName,
     List<Node>? mainQueryCols,
     Map<String, dynamic>? qParams,
@@ -68,7 +68,7 @@ class Fly<T> {
       "variables": {},
       "query": GraphQB(mainQuery).getQueryFor(args: qParams)
     };
-    Map<String, dynamic> results = await this.requestWithoutParse(
+    Map<String, dynamic>? results = await this.requestWithoutParse(
         query: queryMap, apiUrl: apiURL, parameters: parameters);
 
     if (parsers == null || parsers.length == 0) return results;
@@ -82,7 +82,7 @@ class Fly<T> {
     Map<String, String>? parameters,
     Parser<T>? parser,
   }) async {
-    Map<String, dynamic> results = await this.requestWithoutParse(
+    Map<String, dynamic>? results = await this.requestWithoutParse(
         query: query, apiUrl: apiUrl, parameters: parameters);
 
     if (parser == null) return results as T;
@@ -90,7 +90,7 @@ class Fly<T> {
     return parser.parse(results);
   }
 
-  Future<Map<String, dynamic>> requestWithoutParse(
+  Future<Map<String, dynamic>?> requestWithoutParse(
       {String? apiUrl,
       required dynamic query,
       Map<String, String>? parameters}) async {
@@ -136,11 +136,12 @@ class Fly<T> {
     return myData['data'];
   }
 
-  Map<String, dynamic> _parseResults(
-      Map<String, dynamic> results, Map<String, dynamic> parsers) {
+  Map<String, dynamic>? _parseResults(
+      Map<String, dynamic>? results, Map<String, dynamic>? parsers) {
+    if (parsers == null) return null;
     try {
-      return results.map((key, value) {
-        if (!parsers.containsKey(key)) return MapEntry(key, value);
+      return results?.map((key, value) {
+        if (parsers.containsKey(key)) return MapEntry(key, value);
 
         if (value is List) {
           return MapEntry(key, parsers[key].dynamicParse(value));

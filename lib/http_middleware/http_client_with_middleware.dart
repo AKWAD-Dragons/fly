@@ -30,7 +30,7 @@ import 'middleware_contract.dart';
 ///Don't forget to close the client once you are done, as a client keeps
 ///the connection alive with the server.
 class HttpClientWithMiddleware extends http.BaseClient {
-  List<MiddlewareContract> middlewares;
+  List<MiddlewareContract?> middlewares;
   final IOClient _client = IOClient();
 
   HttpClientWithMiddleware._internal({required this.middlewares});
@@ -39,8 +39,7 @@ class HttpClientWithMiddleware extends http.BaseClient {
       {required List<MiddlewareContract?> middlewares}) {
     //Remove any value that is null.
     middlewares.removeWhere((middleware) => middleware == null);
-    return HttpClientWithMiddleware._internal(
-        middlewares: middlewares as List<MiddlewareContract>);
+    return HttpClientWithMiddleware._internal(middlewares: middlewares);
   }
 
   Future<StreamedResponse> send(BaseRequest request) => _client.send(request);
