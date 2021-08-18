@@ -22,12 +22,12 @@ class Fly<T> {
   Map<String, String> defaultParams = {};
 
   Future<Map<String, dynamic>?> query(
-    List<Node> querys, {
-    Map<String, dynamic>? qParams,
-    Map<String, dynamic>? parsers,
-    String? apiURL,
-    Map<String, String>? parameters,
-  }) async =>
+      List<Node> querys, {
+        Map<String, dynamic>? qParams,
+        Map<String, dynamic>? parsers,
+        String? apiURL,
+        Map<String, String>? parameters,
+      }) async =>
       await graphMethod(
         methodName: 'query',
         mainQueryCols: querys,
@@ -38,12 +38,12 @@ class Fly<T> {
       );
 
   Future<Map<String, dynamic>?> mutation(
-    List<Node> mutations, {
-    Map<String, dynamic>? qParams,
-    Map<String, dynamic>? parsers,
-    String? apiURL,
-    Map<String, String>? parameters,
-  }) async =>
+      List<Node> mutations, {
+        Map<String, dynamic>? qParams,
+        Map<String, dynamic>? parsers,
+        String? apiURL,
+        Map<String, String>? parameters,
+      }) async =>
       await graphMethod(
         methodName: 'mutation',
         mainQueryCols: mutations,
@@ -92,8 +92,8 @@ class Fly<T> {
 
   Future<Map<String, dynamic>?> requestWithoutParse(
       {String? apiUrl,
-      required dynamic query,
-      Map<String, String>? parameters}) async {
+        required dynamic query,
+        Map<String, String>? parameters}) async {
     if (apiUrl == null) apiUrl = _apiURL;
     if (parameters == null) parameters = defaultParams;
 
@@ -110,7 +110,7 @@ class Fly<T> {
         body: jsonEncode(query),
       );
     }
-
+    print(response?.body);
     if (response == null)
       throw AppException(true,
           beautifulMsg: 'Error occured',
@@ -141,7 +141,7 @@ class Fly<T> {
     if (parsers == null) return null;
     try {
       return results?.map((key, value) {
-        if (parsers.containsKey(key)) return MapEntry(key, value);
+        if (!parsers.containsKey(key)) return MapEntry(key, value);
 
         if (value is List) {
           return MapEntry(key, parsers[key].dynamicParse(value));
