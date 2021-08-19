@@ -21,13 +21,12 @@ class Fly<T> {
   // Map<String, Parser> parserMap = {};
   Map<String, String> defaultParams = {};
 
-  Future<Map<String, dynamic>?> query(
-      List<Node> querys, {
-        Map<String, dynamic>? qParams,
-        Map<String, dynamic>? parsers,
-        String? apiURL,
-        Map<String, String>? parameters,
-      }) async =>
+  Future<Map<String, dynamic>?> query(List<Node> querys, {
+    Map<String, dynamic>? qParams,
+    Map<String, dynamic>? parsers,
+    String? apiURL,
+    Map<String, String>? parameters,
+  }) async =>
       await graphMethod(
         methodName: 'query',
         mainQueryCols: querys,
@@ -37,13 +36,12 @@ class Fly<T> {
         parameters: parameters,
       );
 
-  Future<Map<String, dynamic>?> mutation(
-      List<Node> mutations, {
-        Map<String, dynamic>? qParams,
-        Map<String, dynamic>? parsers,
-        String? apiURL,
-        Map<String, String>? parameters,
-      }) async =>
+  Future<Map<String, dynamic>?> mutation(List<Node> mutations, {
+    Map<String, dynamic>? qParams,
+    Map<String, dynamic>? parsers,
+    String? apiURL,
+    Map<String, String>? parameters,
+  }) async =>
       await graphMethod(
         methodName: 'mutation',
         mainQueryCols: mutations,
@@ -90,10 +88,9 @@ class Fly<T> {
     return parser.parse(results);
   }
 
-  Future<Map<String, dynamic>?> requestWithoutParse(
-      {String? apiUrl,
-        required dynamic query,
-        Map<String, String>? parameters}) async {
+  Future<Map<String, dynamic>?> requestWithoutParse({String? apiUrl,
+    required dynamic query,
+    Map<String, String>? parameters}) async {
     if (apiUrl == null) apiUrl = _apiURL;
     if (parameters == null) parameters = defaultParams;
 
@@ -111,6 +108,7 @@ class Fly<T> {
       );
     }
     print(response?.body);
+
     if (response == null)
       throw AppException(true,
           beautifulMsg: 'Error occured',
@@ -118,26 +116,30 @@ class Fly<T> {
           code: 0,
           uglyMsg: "No response from server");
 
+    if (response.statusCode > 400) {
+      throw AppException(true, code: response.statusCode, name: 'HTTP ERROR');
+    }
+
     Map<String, dynamic> myData = json.decode(response.body);
     // has error
     if (myData.containsKey("errors")) {
       String? error = myData['errors'][0]['message'];
-      String? trace = myData['errors'][0]['trace'].toString();
-      int code = myData['errors'][0]['extensions']['code'];
+
       throw AppException(
         true,
         beautifulMsg: error ?? 'Error occured',
         name: "Server Error",
-        code: code,
-        uglyMsg: trace,
+        code: 200,
+        uglyMsg: myData.toString(),
       );
     }
+
 
     return myData['data'];
   }
 
-  Map<String, dynamic>? _parseResults(
-      Map<String, dynamic>? results, Map<String, dynamic>? parsers) {
+  Map<String, dynamic>? _parseResults(Map<String, dynamic>? results,
+      Map<String, dynamic>? parsers) {
     if (parsers == null) return null;
     try {
       return results?.map((key, value) {
