@@ -28,15 +28,12 @@ class GraphQB {
 }
 
 class Node {
-  final String _alias;
-  String get alias => _alias ?? name;
-
+  final String alias;
   final String name;
   final Map<String, dynamic> args;
   final List<dynamic> cols;
 
-  Node({String alias, @required this.name, this.args, this.cols})
-      : _alias = alias;
+  Node({this.alias, @required this.name, this.args, this.cols});
 
   void appendArg(String key, dynamic val) {
     args[key] = val;
@@ -44,7 +41,7 @@ class Node {
 
   @override
   String toString() {
-    String nodeStr = '$alias:$name';
+    String nodeStr = alias == null ? name : '$alias:$name';
     if (args != null && args.isNotEmpty) {
       nodeStr += "(";
 
