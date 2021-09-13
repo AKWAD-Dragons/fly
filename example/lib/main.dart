@@ -39,14 +39,32 @@ class MyHomePage extends StatelessWidget {
   }
 
   Future<void> _sendRequest() async {
-    double quantity = 8;
-    Node deleteSelectedGifts = Node(name: "updateCollector", args: {
-      "double": quantity,
-      "double2": '_$quantity',
-    }, cols: [
-      "id",
-    ]);
+    String myString = '''string value\nbackslash
+    new-line value''';
+    int myInt = 5;
+    double myDouble = 3.8;
+    String myEnum = "_ENUM";
 
-    await _fly.mutation([deleteSelectedGifts]);
+    Node node = Node(
+      name: "updateCollector",
+      args: {
+        "id": "564",
+        "input": {
+          "requests": {
+            "update": {
+              "id": "54",
+              "collected_quantityss": myDouble,
+              "collected_quantity": '_$myDouble',
+              "selectedGifts": {
+                "delete": "sd",
+              }
+            }
+          }
+        }
+      },
+      cols: ["id"],
+    );
+
+    await _fly.mutation([node]);
   }
 }

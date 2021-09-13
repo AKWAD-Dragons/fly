@@ -43,4 +43,25 @@ void main() {
     expect(validNodeRegex.hasMatch(nodeWithoutAlias.toString()), true);
     expect(validNodeRegex.hasMatch(emptyNode.toString()), true);
   });
+
+  test('Node types', () {
+    String myString = '''string value\nbackslash
+    new-line value''';
+    int myInt = 5;
+    double myDouble = 3.8;
+    String myEnum = "_ENUM";
+
+    Node node = Node(
+      name: "updateCollector",
+      args: {
+        "string": myString,
+        "int": myInt,
+        "double": myDouble,
+        "enum": myEnum,
+      },
+      cols: ["id"],
+    );
+
+    print(node);
+  });
 }
