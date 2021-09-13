@@ -29,3 +29,7 @@
 ## 2.0.6-pre.1
 
 * Added web support
+
+## 3.0.0
+
+* Added sound null safety support
