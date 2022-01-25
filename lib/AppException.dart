@@ -1,5 +1,5 @@
 class AppException implements Exception {
-  String name;
+  String title;
   bool show;
   int code;
   String? beautifulMsg;
@@ -7,7 +7,7 @@ class AppException implements Exception {
 
   AppException(
     this.show, {
-    required this.name,
+    required this.title,
     required this.code,
     this.beautifulMsg,
     this.uglyMsg,

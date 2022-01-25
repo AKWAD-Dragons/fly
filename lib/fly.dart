@@ -116,7 +116,7 @@ class Fly<T> {
     if (response == null)
       throw AppException(true,
           beautifulMsg: 'Error occured',
-          name: "Server Error",
+          title: "Server Error",
           code: 0,
           uglyMsg: "No response from server");
 
@@ -124,19 +124,21 @@ class Fly<T> {
       throw AppException(true,
           beautifulMsg: ErrorUtil.getMessageFromCode(response.statusCode),
           code: response.statusCode,
-          name: 'HTTP ERROR');
+          title: 'HTTP ERROR');
     }
 
     Map<String, dynamic> myData = json.decode(response.body);
     // has error
     if (myData.containsKey("errors")) {
       String? error = myData['errors'][0]['message'];
+      int? code = myData['errors'][0]['extensions']['code'];
+      String? title = myData['errors'][0]['extensions']['title'];
 
       throw AppException(
         true,
         beautifulMsg: error ?? 'Error occured',
-        name: "Server Error",
-        code: 200,
+        title: title ?? "Server Error",
+        code: code ?? 200,
         uglyMsg: myData.toString(),
       );
     }
@@ -154,7 +156,6 @@ class Fly<T> {
         if (value is List) {
           return MapEntry(key, parsers[key].dynamicParse(value));
         } else {
-          print("INSIDE IS NOOOT " + key);
           return MapEntry(key, parsers[key].parse(value));
         }
       });
