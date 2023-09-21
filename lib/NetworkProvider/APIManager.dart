@@ -2,13 +2,13 @@ import 'dart:async';
 import 'dart:core';
 import 'dart:io';
 
-import 'package:fly_networking/http_logger/log_level.dart';
-import 'package:fly_networking/http_logger/logging_middleware.dart';
-import 'package:fly_networking/http_middleware/http_client_with_middleware.dart';
+import 'package:fly_networking/Utils/logging_interceptor.dart';
 import 'package:http/http.dart' show Response;
+import 'package:http_interceptor/http/http.dart';
 
 class APIManager {
-  late HttpClientWithMiddleware _client;
+  late InterceptedClient _client;
+
   // Duration _timeout;
   // Function _timeoutFunc;
   Map<String, String> map = {
@@ -21,8 +21,11 @@ class APIManager {
   // }
 
   void _setMiddleWares() {
-    _client = HttpClientWithMiddleware.build(
-        middlewares: [HttpLogger(logLevel: LogLevel.BODY)]);
+    _client = InterceptedClient.build(
+      interceptors: [
+        LoggingInterceptor(),
+      ],
+    );
   }
 
   void setHeaders(Map<String, String> headers) {
@@ -41,7 +44,6 @@ class APIManager {
 
       final Response response =
           await _client.post(uri, body: body, headers: map);
-
       return response;
     } catch (e) {
       print("post req Failed $e");

@@ -33,3 +33,11 @@
 ## 3.0.0
 
 * Added sound null safety support
+
+## 3.0.1
+
+* Added title to app exception
+
+## 3.0.2
+
+* fixed http middleware interceptor
