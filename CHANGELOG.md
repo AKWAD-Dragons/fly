@@ -41,3 +41,7 @@
 ## 3.0.2
 
 * fixed http middleware interceptor
+
+## 3.0.3
+
+* upgrade sdk to 2.17 and added request_inspector

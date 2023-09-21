@@ -6,6 +6,8 @@ import 'package:fly_networking/Utils/logging_interceptor.dart';
 import 'package:http/http.dart' show Response;
 import 'package:http_interceptor/http/http.dart';
 
+import '../Utils/request_inspector.dart';
+
 class APIManager {
   late InterceptedClient _client;
 
@@ -24,6 +26,7 @@ class APIManager {
     _client = InterceptedClient.build(
       interceptors: [
         LoggingInterceptor(),
+        RequestInspector(),
       ],
     );
   }
