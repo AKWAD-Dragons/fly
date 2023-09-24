@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:http_interceptor/http/interceptor_contract.dart';
 import 'package:http_interceptor/models/models.dart';
 import 'package:requests_inspector/requests_inspector.dart';
@@ -14,7 +16,7 @@ class RequestInspector implements InterceptorContract {
       RequestDetails(
         requestName: data.request?.body,
         requestMethod: RequestMethod.POST,
-        requestBody:  data.request?.body,
+        requestBody:  jsonDecode(data.request?.body),
         url: data.request?.url ?? "",
         queryParameters: "",
         statusCode: data.statusCode,
