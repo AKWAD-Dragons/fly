@@ -12,15 +12,24 @@ class RequestInspector implements InterceptorContract {
 
   @override
   Future<ResponseData> interceptResponse({required ResponseData data}) async {
+    final requestBody = jsonDecode(data.request?.body) as Map<String, dynamic>;
+    String methodType = "";
+    if (requestBody.containsKey('query')) {
+      requestBody['query'] = jsonDecode(requestBody['query']);
+      methodType = "Query";
+    } else if (requestBody.containsKey('mutation')) {
+      requestBody['mutation'] = jsonDecode(requestBody['mutation']);
+      methodType = "Mutation";
+    }
     InspectorController().addNewRequest(
       RequestDetails(
-        requestName: data.request?.body,
+        requestName: methodType,
         requestMethod: RequestMethod.POST,
-        requestBody:  jsonDecode(data.request?.body),
+        requestBody: requestBody,
         url: data.request?.url ?? "",
         queryParameters: "",
         statusCode: data.statusCode,
-        responseBody: data.body,
+        responseBody: jsonDecode(data.body ?? ""),
       ),
     );
     return data;
