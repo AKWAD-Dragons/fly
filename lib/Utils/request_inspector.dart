@@ -15,12 +15,8 @@ class RequestInspector implements InterceptorContract {
     final requestBody = jsonDecode(data.request?.body) as Map<String, dynamic>;
     String methodType = "";
     if (requestBody.containsKey('query')) {
-      print(requestBody['query'] );
-      requestBody['query'] = jsonDecode(requestBody['query'].toString());
       methodType = "Query";
     } else if (requestBody.containsKey('mutation')) {
-      print(requestBody['mutation'] );
-      requestBody['mutation'] = jsonDecode(requestBody['mutation'].toString());
       methodType = "Mutation";
     }
     InspectorController().addNewRequest(
