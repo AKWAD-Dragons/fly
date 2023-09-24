@@ -12,8 +12,9 @@ class RequestInspector implements InterceptorContract {
   Future<ResponseData> interceptResponse({required ResponseData data}) async {
     InspectorController().addNewRequest(
       RequestDetails(
-        requestName: data.body,
+        requestName: data.request?.body,
         requestMethod: RequestMethod.POST,
+        requestBody:  data.request?.body,
         url: data.request?.url ?? "",
         queryParameters: "",
         statusCode: data.statusCode,
