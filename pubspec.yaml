@@ -12,6 +12,7 @@ dependencies:
   http: ^0.13.3
   http_interceptor: ^1.0.2
   requests_inspector: ^3.1.2
+  graphql_parser2: ^6.0.0
 
 
 dev_dependencies:
